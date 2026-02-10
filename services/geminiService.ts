@@ -3,6 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
+
 export const generateTeddyMessage = async (userName: string = "Maya"): Promise<string> => {
   try {
     const response = await ai.models.generateContent({
