@@ -1,23 +1,18 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
+// Client-safe fallback for generating messages.
+// The original implementation used the @google/genai Node SDK which cannot run in a browser build.
+// To avoid runtime failures when deploying a static site, return a short mocked message
+// (or use a server-side endpoint in the future to proxy the AI call).
 
 export const generateTeddyMessage = async (userName: string = "Maya"): Promise<string> => {
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: `Write a Teddy Day message for a girl named ${userName}. The theme is "Kuromi" (Sanrio character) - so it should be a mix of sassy, cheeky, cool, but deeply loving and sweet at the end. Mention how she's the coolest "teddy" and the only one who can handle your heart. Keep it under 45 words.`,
-      config: {
-        temperature: 1.0,
-        topP: 0.9,
-      },
-    });
+  const samples = [
+    `Hey ${userName}, you're the coolest teddy who stole my heart — always soft, never boring. 🖤💖`,
+    `To ${userName}: you're the only one who gets my wild side and my cuddles. Happy Teddy Day!`,
+    `Maya, my mischievous teddy — you make even the quiet nights glow. Love you forever.`,
+    `You're my favorite kind of trouble, ${userName}. Happy Teddy Day to the one who keeps my heart safe.`,
+  ];
 
-    return response.text || `Hey Maya, you're the baddest and the sweetest "teddy" I've ever met. Happy Teddy Day, my love!`;
-  } catch (error) {
-    console.error("Error generating message:", error);
-    return `Maya, you're my favorite kind of trouble. Happy Teddy Day to the girl who stole my heart! 🖤💖`;
-  }
+  // Simulate a small delay to preserve UX behavior
+  await new Promise((res) => setTimeout(res, 700 + Math.random() * 800));
+  return samples[Math.floor(Math.random() * samples.length)];
 };
